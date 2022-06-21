@@ -1,5 +1,6 @@
 //Model filename should start with capital letter
 const mongoose=require('mongoose');
+const { Schema } = mongoose;
 const notesSchema = new Schema({
     title:{
         type:String,
