@@ -39,10 +39,46 @@ router.post('/createuser',[
       res.json({authToken})
     //   res.json({message:"User Created!"})
     }
-    catch
+    catch(error)
     {
-       // console.error(error.message)
+        console.error(error.message)
         res.status(500).send("Some error occured!")
     }
+})
+router.post('/login',[
+    body('email','Enter a valid mail').isEmail(),
+    // password must be at least 5 chars long
+    body('password',"Password can't be blank").exists()
+], async(req,res)=>{
+   // try{
+    ////If  there are errors return bad request and the errors
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({ errors: errors.array() });
+    }
+    const {email,password}=req.body
+    let user= await User.findOne({email})
+    if(!user)
+    {
+        res.status(500).send({error:"Enter valid credentials!"})
+    }
+    const comparePass=await bcrypt.compare(password,user.password)
+    if(!comparePass)
+    {
+        res.status(500).send({error:"Enter valid credentials!"})
+    }
+    const data={
+        user:{
+            id:user.id
+        }
+      }
+      const authToken=jwt.sign(data,JWT_SECRET)
+      res.json({authToken})
+   // }
+    // catch(error)
+    // {
+    //     console.error(error.message)
+    //     res.status(500).send("Some error occured!")
+    // }
 })
 module.exports=router
