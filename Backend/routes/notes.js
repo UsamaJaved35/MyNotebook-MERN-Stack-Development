@@ -35,19 +35,37 @@ router.post('/addnote',fetchuser,[
 //ROUTE 3 UPDATING A EXISTING NOTE OF USER: GET "/api/notes/updatenote". login required
 router.put('/updatenote/:id',fetchuser ,async(req,res)=>{
     const {title,description,tag}=req.body
+    //adding a new note
     const newNote={};
     if(title){newNote.title=title}
     if(description){newNote.description=description}
     if(tag){newNote.tag=tag}
-
+    //checking if the note exists
     let note=await Notes.findById(req.params.id);
     if(!note){return res.status(404).send("User Not Found!!!")}
+    //checking if the user is same and authenticated
     if(note.user.toString()!==req.user.id)
     {
         return res.status(401).send("Not Allowed!!")
     }
-
+    //updating the note
     note=await  Notes.findByIdAndUpdate(req.params.id,{$set:newNote},{new:true})
     res.json(note)
+})
+
+
+//ROUTE 4 DELETING A EXISTING NOTE OF USER: DELETE "/api/notes/deletenote". login required
+router.delete('/deletenote/:id',fetchuser ,async(req,res)=>{
+    //checking if the note exists
+    let note=await Notes.findById(req.params.id);
+    if(!note){return res.status(404).send("User Not Found!!!")}
+    //checking if the user is same and authenticated
+    if(note.user.toString()!==req.user.id)
+    {
+        return res.status(401).send("Not Allowed!!")
+    }
+    //deleting the note
+    note=await Notes.findByIdAndDelete(req.params.id)
+    res.json({"Success":"Note has been deleted!",note:note})
 })
 module.exports=router
