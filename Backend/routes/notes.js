@@ -21,7 +21,7 @@ router.post('/addnote',fetchuser,[
     try {
         const{title,description,tag}=req.body
         const notes=new Notes({
-            title,description,tag,user:req.userId
+            title,description,tag,user:req.user.id
         })
         const savedNote=await notes.save()
         res.json(savedNote)
