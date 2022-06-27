@@ -80,13 +80,12 @@ const NoteState=(props)=>{
 
         //ADD A NOTE
         const addNote=(newNote)=>{
-          console.log("NOTE ADDED")
-          console.log(newNote)
           setNotes(Notes.concat(newNote))
         }
         //DELETE A NOTE
-        const deleteNote=(newNote)=>{
-
+        const deleteNote=(id)=>{
+            const newNotes=Notes.filter((note)=>{return note._id!==id})
+            setNotes(newNotes)
         }
         //EDIT A NOTE
         const updateNote=(newNote)=>{
