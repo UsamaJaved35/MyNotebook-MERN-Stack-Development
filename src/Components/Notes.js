@@ -7,13 +7,14 @@ const Notes = (props) => {
   return (
     <>
     <h1>YOUR NOTES</ h1>
-    <div className='rows my-3'>
+    <div className='container'>
+    <div className='row my-3'>
     {Notes.map((note)=>{
-       return <NoteItem note={note}/>
+       return <NoteItem key={note._id} note={note}/>
     })}
+    </div>
     </div>
     </>
   )
 }
-
 export default Notes
